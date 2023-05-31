@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const {
@@ -24,8 +25,19 @@ const Login = () => {
     signIn(data.email, data.password)
       .then((user) => {
         console.log(user);
-        //to tkae to the right route after login
-        navigate(from, { replace: true });
+        const currentUser = { email: user.email };
+
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(currentUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            localStorage.setItem("doctorsPortalToken", data.token);
+            toast("loggedn in successfully");
+            navigate(from, { replace: true });
+          });
       })
       .catch((err) => setLoginError(err.message));
     console.log(data);

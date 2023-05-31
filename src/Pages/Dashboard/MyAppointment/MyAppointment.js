@@ -6,23 +6,26 @@ import { AuthContext } from "../../../context/AuthProvider";
 const MyAppointment = () => {
   const { user } = useContext(AuthContext);
   const url = `http://localhost:5000/bookings?email=${user?.email}`;
-  const { data: bookings = [] } = useQuery({
+  const { data: bookings = [], isLoading} = useQuery({
     //data:booings=[] is default, like initial state value
-    queryKey: ["bookings", user?.email], //here user?.email is a dependency, it's also the req.param 
+    queryKey: ["bookings"], //here user?.email is a dependency, it's also the req.param
     queryFn: async () => {
-      const res = await fetch(url, 
-        {
-          headers:{
-            authorization: `bearer ${localStorage.getItem('accessToken')}`
-          }
-        });
+      const res = await fetch(url, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("doctorsPortalToken")}`,
+        },
+      });
 
       const data = await res.json();
-      console.log('data', data)
+      console.log("Bookings", data);
       return data;
     },
   });
 
+  if(isLoading){
+    return <p>Loading..</p>
+
+  }
   return (
     <div>
       <h3 className="text-3xl">My Appointment</h3>
@@ -39,7 +42,7 @@ const MyAppointment = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking, i) => (
+            {bookings?.map((booking, i) => (
               <tr key={booking._id}>
                 <th>{i + 1}</th>
                 <td>{booking.patient}</td>

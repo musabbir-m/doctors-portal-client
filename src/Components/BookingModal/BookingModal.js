@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthProvider";
 const BookingModal = ({ treatmentName, selectedDate, setTreatment, refetch }) => {
   const { user } = useContext(AuthContext);
 
-  const { name, slots } = treatmentName; //treatment is appointment options just different names
+  const { name, slots, price } = treatmentName; //treatment is appointment options just different names
   const date = format(selectedDate, "PP");
 
   const handleBooking = (event) => {
@@ -24,6 +24,7 @@ const BookingModal = ({ treatmentName, selectedDate, setTreatment, refetch }) =>
       slot,
       email,
       phone,
+      price
     };
     console.log(booking);
     //To Do : send  data  to the server

@@ -9,11 +9,15 @@ import Reviews from "../../Pages/Home/Testimonials/Reviews";
 import Login from "../../Pages/Login/Login";
 import SignUp from "../../Pages/SignUp/SignUp";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import Payment from "../../Pages/Dashboard/Payment/Payment";
+import DisplayError from "../../Pages/Shared/DisplayError/DisplayError";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
+    errorElement: <DisplayError></DisplayError>
+    ,
     children: [
       { path: "/", element: <Home></Home> },
 
@@ -26,6 +30,7 @@ const router = createBrowserRouter([
   //Layout for dashboard
   {
     path: "/dashboard",
+    errorElement: <DisplayError></DisplayError>,
     element: (
       <PrivateRoute>
         <DashboardLayout></DashboardLayout>
@@ -35,10 +40,12 @@ const router = createBrowserRouter([
       {
         path:'/dashboard', element:<MyAppointment></MyAppointment>
       },
-    //   {
-    //     path:'/dashboard/allusers', 
-    //     element: 
-    //   }
+      {
+        path: "/dashboard/payment/:id",
+        element: <Payment/>,
+        loader: ({params})=> fetch(`http://localhost:5000/bookings/${params.id}`)
+      }
+
     ]
   },
 ]);
